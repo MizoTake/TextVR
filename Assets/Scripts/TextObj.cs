@@ -5,21 +5,25 @@ using UnityEngine.SceneManagement;
 public class TextObj : BaseObject {
 
 	private Vector3 keepPos;
-	public Vector3 KeepPosition{ get{ return keepPos; } set{ if(caughtCount != 2) keepPos = value; }}
 	private bool caught;
-	public bool CaughtStatus{ get{ return caught; } }
 	private TextMesh tm;
 	private int caughtCount;
 	private bool alphabetStop;
+    private string mineText;
 
-	// Use this for initialization
-	void Start () {
+    public Vector3 KeepPosition { get { return keepPos; } set { if (caughtCount != 2) keepPos = value; } }
+    public bool CaughtStatus { get { return caught; } }
+    public string MineText { get { return mineText; } set { mineText = value; } }
+
+    // Use this for initialization
+    void Start () {
 		caught = false;
 		if(GetComponent<TextMesh>()) tm = GetComponent<TextMesh> ();
 		//Scene is Flow : Active
 		if(SceneManager.GetActiveScene().name == "Flow") Destroy (this.gameObject, 4.0f);
 		caughtCount = 0;
 		alphabetStop = false;
+        mineText = GetComponent<TextMesh>().text;
 	}
 	
 	// Update is called once per frame
@@ -66,4 +70,10 @@ public class TextObj : BaseObject {
 	public override void TouchPad(Vector2 position){
 		KeepPosition += (Vector3.forward * position.y) / 30;
 	}
+
+    void TriggerEnter(Collision other) {
+        if (caught && other.gameObject.tag == "Answer") {
+            other.gameObject.GetComponent<PutPlace>().CheckText(gameObject);
+        }
+    }
 }

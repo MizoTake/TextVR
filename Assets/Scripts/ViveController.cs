@@ -36,6 +36,5 @@ public class ViveController : MonoBehaviour {
 				targetScript.GetCaught (child);
 			}
 		}
-		//Debug.DrawRay (child.transform.position, child.transform.forward, Color.green, 10.0f);
 	}
 }

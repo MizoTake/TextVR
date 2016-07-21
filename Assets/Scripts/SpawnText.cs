@@ -21,9 +21,11 @@ public class SpawnText : MonoBehaviour {
 				StartCoroutine (InstanceText ());
 			}
 		}
+        /*
 		if (SceneManager.GetActiveScene ().name == "Test") {
 			StartCoroutine (InstanceText ());
 		}
+        */
 		self = this;
 	}
 	
@@ -43,21 +45,22 @@ public class SpawnText : MonoBehaviour {
 		return result;
 	}
 
+    public void SpawnTextObj() {
+        StartCoroutine(InstanceText());
+    }
+
 	IEnumerator InstanceText(){
 		int cnt = 0;
 		while (true) {
-			if (cnt >= MAX_INSTANCE_OBJECT) {
-				cnt = 0;
-			}
 			if(_textObjs[cnt] != null){
 				if (_textObjs [cnt].GetComponent<TextObj> ().CaughtStatus) {
 					cnt += 1;
-					Debug.Log ("+=");
 					continue;
 				} else {
 					Destroy (this._textObjs[cnt]);
 				}
 			}
+
 			Vector3 randomPos;
 			randomPos = new Vector3 (Random.Range (transform.position.x - transform.localScale.x, transform.position.x + transform.localScale.x), 
 				transform.position.y, 
@@ -67,7 +70,12 @@ public class SpawnText : MonoBehaviour {
 			_textObjs[cnt].transform.LookAt (_player.transform);
 			_textObjs[cnt].transform.rotation = Quaternion.Euler (0, _textObjs[cnt].transform.rotation.y, 0);
 			cnt += 1;
-			yield return new WaitForSeconds (0.0f);
+
+            if (cnt >= MAX_INSTANCE_OBJECT)
+            {
+                cnt = 0;
+            }
+            yield return new WaitForSeconds (0.0f);
 		}
 	}
 }
